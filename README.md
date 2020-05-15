@@ -19,5 +19,5 @@ docker-compose --compatibility exec zipkin-service bash
 docker-compose --compatibility logs -f cassandra-service  
 docker-compose --compatibility logs -f rabbitmq-service  
 docker-compose --compatibility logs -f zipkin-service  
-docker-compose --compatibility logs -f --tail 10  
+docker-compose --compatibility logs -f --tail 100  
 docker-compose --compatibility logs -f --tail 10  cassandra-service  
