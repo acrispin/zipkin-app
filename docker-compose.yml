@@ -71,9 +71,6 @@ services:
       STORAGE_TYPE: cassandra3
       CASSANDRA_ENSURE_SCHEMA: 'false'
       CASSANDRA_CONTACT_POINTS: zipkin-cassandra-server:9042
-      # Uncomment to enable debug logging, for produccion set to INFO
-      JAVA_OPTS: -Dlogging.level.zipkin2=DEBUG
-      QUERY_LOG_LEVEL: DEBUG
     logging:
       driver: "json-file"
       options:

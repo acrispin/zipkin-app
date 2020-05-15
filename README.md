@@ -10,14 +10,17 @@ docker-compose --compatibility up -d cassandra-service
 docker-compose --compatibility up -d rabbitmq-service  
 docker-compose --compatibility up -d zipkin-service  
 
+# si exite un cambio en el docker-compose.yml, se debe hacer "build" y luego ejecutar el contenedor con "up -d"
+docker-compose --compatibility build cassandra-service  
+docker-compose --compatibility build rabbitmq-service  
+docker-compose --compatibility build zipkin-service  
+
+# logs de los servicios
+docker-compose --compatibility logs -f --tail 100 cassandra-service  
+docker-compose --compatibility logs -f --tail 100 rabbitmq-service  
+docker-compose --compatibility logs -f --tail 100 zipkin-service  
+
 # entrar al contener con bash o sh por servicio
 docker-compose --compatibility exec cassandra-service sh  
 docker-compose --compatibility exec rabbitmq-service sh  
 docker-compose --compatibility exec zipkin-service bash  
-
-# logs de los servicios
-docker-compose --compatibility logs -f cassandra-service  
-docker-compose --compatibility logs -f rabbitmq-service  
-docker-compose --compatibility logs -f zipkin-service  
-docker-compose --compatibility logs -f --tail 100  
-docker-compose --compatibility logs -f --tail 10  cassandra-service  
