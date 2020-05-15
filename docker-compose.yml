@@ -1,0 +1,93 @@
+version: '3.7'
+services:  
+
+  cassandra-service:
+    build:
+      context: .
+      dockerfile: cassandra/Dockerfile
+    image: zipkin-cassandra:v1
+    container_name: zipkin-cassandra-server
+    ports:
+      - "9042:9042"
+    restart: always
+    networks:
+      - zipkin-network
+    volumes:
+      - cassandra-data:/cassandra/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          # for development or testing: 4 cpu min server host, for production: 8 cpu min server host
+          cpus: '0.50'
+          # for development or testing min value: 2048M (2G), for production min value: 4096M (4G), recomended value: 8192M (8G)
+          # for development or testing min value: 2560M (2.5G) for server host with 10G Ram or above
+          memory: 2560M
+
+  rabbitmq-service:
+    image: rabbitmq:3.8.3-rc.2-management-alpine
+    container_name: zipkin-rabbitmq-server
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    restart: always
+    networks:
+      - zipkin-network
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 250M
+
+  zipkin-service:
+    build:
+      context: .
+      dockerfile: zipkin/Dockerfile
+    image: zipkin-web:v1
+    container_name: zipkin-web-server
+    ports:
+      - "9411:9411"
+    restart: always
+    networks:
+      - zipkin-network
+    depends_on: 
+      - cassandra-service
+      - rabbitmq-service
+    environment:
+      RABBIT_ADDRESSES: zipkin-rabbitmq-server:5672
+      # for development or testing: 2, for production: 4 or above
+      RABBIT_CONCURRENCY: 2
+      STORAGE_TYPE: cassandra3
+      CASSANDRA_ENSURE_SCHEMA: 'false'
+      CASSANDRA_CONTACT_POINTS: zipkin-cassandra-server:9042
+      # Uncomment to enable debug logging, for produccion set to INFO
+      JAVA_OPTS: -Dlogging.level.zipkin2=DEBUG
+      QUERY_LOG_LEVEL: DEBUG
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 350M
+
+networks:
+  zipkin-network:
+
+volumes:
+  rabbitmq-data:
+  cassandra-data:
