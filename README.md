@@ -20,6 +20,11 @@ docker-compose --compatibility logs -f --tail 100 cassandra-service
 docker-compose --compatibility logs -f --tail 100 rabbitmq-service  
 docker-compose --compatibility logs -f --tail 100 zipkin-service  
 
+# detener y eliminar contenedores
+docker-compose --compatibility rm -fs cassandra-service  
+docker-compose --compatibility rm -fs rabbitmq-service  
+docker-compose --compatibility rm -fs zipkin-service  
+
 # entrar al contener con bash o sh por servicio
 docker-compose --compatibility exec cassandra-service sh  
 docker-compose --compatibility exec rabbitmq-service sh  
