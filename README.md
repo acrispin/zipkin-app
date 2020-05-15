@@ -10,7 +10,7 @@ docker-compose --compatibility up -d cassandra-service
 docker-compose --compatibility up -d rabbitmq-service  
 docker-compose --compatibility up -d zipkin-service  
 
-# si exite un cambio en el docker-compose.yml, se debe hacer "build" y luego ejecutar el contenedor con "up -d"
+# si exite un cambio en la imagen de un servicio, detener, luego se debe hacer "build" y luego ejecutar el contenedor con "up -d"
 docker-compose --compatibility build cassandra-service  
 docker-compose --compatibility build rabbitmq-service  
 docker-compose --compatibility build zipkin-service  
